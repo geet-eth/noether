@@ -583,6 +583,16 @@ pub trait ComplementedLattice: BoundedLattice where Self: Sized{
     fn complement(&self) -> Option<Self::Complement>;
 }
 
+//adding = irreductible, meetirreductible?
+
+/// Represents boolean algebra
+///
+/// # Mathematial definition
+/// A Boolean algebra is a complemented distributive lattice.
+/// Properties: TODO https://ncatlab.org/nlab/show/Boolean+algebra
+pub trait BooleanAlgebra: ComplementedLattice + DistributiveLattice{}
+
+
 // Blanket implementations for basic operation traits
 impl<T: Add<Output = T>> ClosedAdd for T {}
 impl<T: for<'a> Add<&'a T, Output = T>> ClosedAddRef for T {}
@@ -689,3 +699,7 @@ impl<T: Field + PartialOrd> OrderedField for T {}
 
 // FieldExtensionTower
 // Note: This cannot be implemented as a blanket impl because it requires specific knowledge about the tower structure
+
+
+// Lattice
+impl<T: JoinSemilattice + MeetSemilattice> Lattice for T {}
