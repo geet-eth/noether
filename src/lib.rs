@@ -518,7 +518,6 @@ pub trait FieldExtensionTower: FieldExtension {
     fn extension_degree(i: usize) -> usize;
 }
 
-
 /// Represents a  join-semilattice
 /// //a Partially ordered set which admits all finite joins, or equivalently which admits a bottom element ⊥ and binary joins a ∨ b
 /// # Mathematical Definition
@@ -526,7 +525,7 @@ pub trait FieldExtensionTower: FieldExtension {
 ///
 /// Properties:
 /// * ∨ (join) is idempotent, commutative, and associative
-pub trait JoinSemilattice: PartialOrd{
+pub trait JoinSemilattice: PartialOrd {
     fn join(&self, other: &Self) -> Self;
 }
 
@@ -537,10 +536,9 @@ pub trait JoinSemilattice: PartialOrd{
 /// meet-semilattice aka lower semilattice is a partially ordered set which has a meet (or greatest lower bound) for any nonempty finite subset.
 /// Every join-semilattice is a meet-semilattice in the inverse order and vice versa.
 
-pub trait MeetSemilattice: PartialOrd{
+pub trait MeetSemilattice: PartialOrd {
     fn meet(&self, other: &Self) -> Self;
 }
-
 
 /// Represents a Lattice
 /// # Mathematical Definition
@@ -550,11 +548,11 @@ pub trait MeetSemilattice: PartialOrd{
 /// * Absorption laws:
 ///   - a∨(a∧b)=a
 ///   - a∧(a∨b)=a
-pub trait Lattice: JoinSemilattice + MeetSemilattice{}
+pub trait Lattice: JoinSemilattice + MeetSemilattice {}
 
-pub trait DistributiveLattice: Lattice{}
+pub trait DistributiveLattice: Lattice {}
 
-pub trait ModularLattice: Lattice{}
+pub trait ModularLattice: Lattice {}
 
 /// Represents a bounded lattice
 /// # Mathematical Definition
@@ -563,7 +561,7 @@ pub trait ModularLattice: Lattice{}
 /// * ⊤ (top) is the identity element for ∧ (meet)
 /// * ⊥ (bottom) is the identity element for ∨ (join)
 
-pub trait BoundedLattice: Lattice{
+pub trait BoundedLattice: Lattice {
     /// Returns the top of the lattice
     fn top() -> Self;
 
@@ -574,14 +572,15 @@ pub trait BoundedLattice: Lattice{
 /// Represents a complemented lattice
 /// # Mathematical definition
 /// A Complemented lattice is a lattice where all elements have atleast one complement
-pub trait ComplementedLattice: BoundedLattice{
+pub trait ComplementedLattice: BoundedLattice where Self: Sized{
+    type Complement;
     ///Checks if a given element is a valid complement
-    fn is_complement(&self, other: &Self) -> bool{
+    fn is_complement(&self, other: &Self) -> bool {
         self.join(other) == Self::top() && self.meet(other) == Self::bottom()
     }
-    /// Returns a complement of the element
-    fn complement(&self) -> Self;
 
+    /// Returns a complement of the element
+    fn complement(&self) -> Option<Self::Complement>;
 }
 
 // Blanket implementations for basic operation traits
