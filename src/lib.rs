@@ -553,11 +553,14 @@ pub trait Field: EuclideanDomain + MultiplicativeAbelianGroup {}
 /// # Properties
 /// - The number of elements is always a prime power p^n
 pub trait FiniteField: Field {
+    ///Allows for an arbitrary size representation without specificing type
+    type ScalarType: Clone + PartialOrd + Zero + One;
+
     /// Returns the characteristic of the field.
-    fn characteristic() -> u64;
+    fn characteristic() -> Self::ScalarType;
 
     /// Returns the number of elements in the field.
-    fn order() -> u64;
+    fn order() -> Self::ScalarType;
 }
 
 /// Represents an Ordered Field, a field with a total order compatible with its operations.
