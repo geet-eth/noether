@@ -585,12 +585,35 @@ pub trait ComplementedLattice: BoundedLattice where Self: Sized{
 
 //adding = irreductible, meetirreductible?
 
-/// Represents boolean algebra
+/// # Mathematical Definition
+/// A Boolean algebra is a complemented distributive lattice (B, ∧, ∨, ¬, ⊥, ⊤)
 ///
-/// # Mathematial definition
-/// A Boolean algebra is a complemented distributive lattice.
-/// Properties: TODO https://ncatlab.org/nlab/show/Boolean+algebra
-pub trait BooleanAlgebra: ComplementedLattice + DistributiveLattice{}
+/// Properties:
+/// there is an element ⊤ (a top element) such that x ≤ ⊤ always holds;
+/// there is an element ⊥ (a bottom element) such that ⊥ ≤ x always holds;
+/// given elements a and b, there is an element a ∧ b (a meet of a and b) such that x ≤ a ∧ b holds iff x ≤ a and x ≤ b;
+/// given elements a and b, there is an element a ∨ b (a join of a and b) such that a ∨ b ≤ x holds iff a ≤ x and b ≤ x;
+/// given an element a, there is an element ¬a (a complement of a) such that a ∧ ¬a ≤ ⊥ and ⊤ ≤ a ∨ ¬a;
+/// given elements a, b, and c, we have a ∧ (b ∨ c) ≤ (a ∧ b) ∨ (a ∧ c).
+pub trait BooleanAlgebra: ComplementedLattice + DistributiveLattice{
+    /// Performs the NOT operation (complement)
+    fn not(&self) -> Self;
+
+    /// Performs the XOR operation
+    fn xor(&self, other: &Self) -> Self;
+
+    /// Performs the implication operation
+    fn implies(&self, other: &Self) -> Self;
+
+    /// Performs the bi-implication (equivalence) operation
+    fn equiv(&self, other: &Self) -> Self;
+
+    /// Checks if this element is the top element (true)
+    fn is_true(&self) -> bool;
+
+    /// Checks if this element is the bottom element (false)
+    fn is_false(&self) -> bool;
+}
 
 
 // Blanket implementations for basic operation traits
@@ -703,3 +726,6 @@ impl<T: Field + PartialOrd> OrderedField for T {}
 
 // Lattice
 impl<T: JoinSemilattice + MeetSemilattice> Lattice for T {}
+
+// Boolenan Algebra
+// Note: This cannot be impledmented as a blanket impl beacause it requires specific knowledge about what constitues "true" and "false" in the boolean algebra structure
